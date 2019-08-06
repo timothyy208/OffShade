@@ -14,10 +14,11 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        startGameButton.backgroundColor = .clear
+        startGameButton.backgroundColor = .gray
+        startGameButton.setTitleColor(.white, for: .normal)
         startGameButton.layer.cornerRadius = 5
         startGameButton.layer.borderWidth = 1
-        startGameButton.layer.borderColor = UIColor.black.cgColor
+        startGameButton.layer.borderColor = UIColor.gray.cgColor
     }
 
 
