@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B51AA98C22FC0C3B003B5DE4 /* OptionsWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51AA98B22FC0C3B003B5DE4 /* OptionsWindow.swift */; };
 		B5D8147F22EED60F00718342 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D8147E22EED60F00718342 /* AppDelegate.swift */; };
 		B5D8148122EED60F00718342 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D8148022EED60F00718342 /* ViewController.swift */; };
 		B5D8148422EED60F00718342 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B5D8148222EED60F00718342 /* Main.storyboard */; };
@@ -35,6 +36,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B51AA98B22FC0C3B003B5DE4 /* OptionsWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsWindow.swift; sourceTree = "<group>"; };
 		B5D8147B22EED60F00718342 /* OffShade.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OffShade.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5D8147E22EED60F00718342 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B5D8148022EED60F00718342 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -100,8 +102,9 @@
 			isa = PBXGroup;
 			children = (
 				B5D8147E22EED60F00718342 /* AppDelegate.swift */,
-				B5D8148022EED60F00718342 /* ViewController.swift */,
 				B5D8148222EED60F00718342 /* Main.storyboard */,
+				B5D8148022EED60F00718342 /* ViewController.swift */,
+				B51AA98B22FC0C3B003B5DE4 /* OptionsWindow.swift */,
 				B5D814AC22EED6AF00718342 /* GameWindow.swift */,
 				B5D8148522EED61000718342 /* Assets.xcassets */,
 				B5D8148722EED61000718342 /* LaunchScreen.storyboard */,
@@ -261,6 +264,7 @@
 			files = (
 				B5D814AD22EED6AF00718342 /* GameWindow.swift in Sources */,
 				B5D8148122EED60F00718342 /* ViewController.swift in Sources */,
+				B51AA98C22FC0C3B003B5DE4 /* OptionsWindow.swift in Sources */,
 				B5D8147F22EED60F00718342 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -437,13 +441,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 7ZNZD88JJ6;
+				DEVELOPMENT_TEAM = QTT2AX4QZR;
 				INFOPLIST_FILE = OffShade/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.yangtk.OffShade;
+				PRODUCT_BUNDLE_IDENTIFIER = com.timothyy208.OffShade;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -455,13 +459,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 7ZNZD88JJ6;
+				DEVELOPMENT_TEAM = QTT2AX4QZR;
 				INFOPLIST_FILE = OffShade/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.yangtk.OffShade;
+				PRODUCT_BUNDLE_IDENTIFIER = com.timothyy208.OffShade;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

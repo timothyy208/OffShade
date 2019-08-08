@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import AVFoundation
+import AudioToolbox
 
 class GameWindow: UIViewController {
 
@@ -14,22 +16,26 @@ class GameWindow: UIViewController {
     @IBOutlet weak var playAgainButton: UIButton!
     @IBOutlet weak var quitButton: UIButton!
     @IBOutlet weak var pointLabel: UILabel!
+    @IBOutlet weak var timerLabel: UILabel!
     
+    var vibrate = true
+    var muted = false
+    var audioPlayer = AVAudioPlayer()
     var points = 0
     var countdownTimer: Timer!
     var totalTime = 60
-    var timerLabel: UITextView!
+    //var timerLabel: UITextView!
     var buttons: [Int:UIButton] = [:]
     let colors: [UIColor:UIColor] =
         [UIColor(displayP3Red: 191.0/255.0, green: 0/255.0, blue: 255/255.0, alpha: 1.0) : UIColor(displayP3Red: 200.0/255.0, green: 51.0/255.0, blue: 255.0/255.0, alpha: 1.0),
          UIColor(displayP3Red: 255.0/255.0, green: 0/255.0, blue: 255/255.0, alpha: 1.0) : UIColor(displayP3Red: 255.0/255.0, green: 75.0/255.0, blue: 255/255.0, alpha: 1.0),
          UIColor(displayP3Red: 255.0/255.0, green: 0/255.0, blue: 0/255.0, alpha: 1.0) : UIColor(displayP3Red: 255.0/255.0, green: 35.0/255.0, blue: 67.0/255.0, alpha: 1.0),
          UIColor(displayP3Red: 0/255.0, green: 0/255.0, blue: 255.0/255.0, alpha: 1.0) : UIColor(displayP3Red: 25.0/255.0, green: 25.0/255.0, blue: 255/255.0, alpha: 1.0),
-         UIColor(displayP3Red: 0/255.0, green: 255.0/255.0, blue: 0/255.0, alpha: 1.0) : UIColor(displayP3Red: 120.0/255.0, green: 255.0/255.0, blue: 120.0/255.0, alpha: 1.0),
+         UIColor(displayP3Red: 0/255.0, green: 255.0/255.0, blue: 0/255.0, alpha: 1.0) : UIColor(displayP3Red: 100.0/255.0, green: 255.0/255.0, blue: 100.0/255.0, alpha: 1.0),
          UIColor(displayP3Red: 153.0/255.0, green: 204/255.0, blue: 255/255.0, alpha: 1.0) : UIColor(displayP3Red: 170/255.0, green: 210/255.0, blue: 255.0/255.0, alpha: 1.0),
          UIColor(displayP3Red: 153.0/255.0, green: 102/255.0, blue: 51/255.0, alpha: 1.0) : UIColor(displayP3Red: 170/255.0, green: 115/255.0, blue: 51/255.0, alpha: 1.0),
          UIColor(displayP3Red: 255/255.0, green: 255/255.0, blue: 204/255.0, alpha: 1.0) : UIColor(displayP3Red: 255/255.0, green: 255/255.0, blue: 218/255.0, alpha: 1.0),
-         UIColor(displayP3Red: 20/255.0, green: 20/255.0, blue: 20/255.0, alpha: 1.0) : UIColor(displayP3Red: 25/255.0, green: 25/255.0, blue: 25/255.0, alpha: 1.0)
+         UIColor(displayP3Red: 20/255.0, green: 20/255.0, blue: 20/255.0, alpha: 1.0) : UIColor(displayP3Red: 22/255.0, green: 22/255.0, blue: 25/255.0, alpha: 1.0)
         ]
     var mainColor: UIColor!
     var offColor: UIColor!
@@ -50,18 +56,19 @@ class GameWindow: UIViewController {
         screenWidth = Double(screenSize.width)
         screenHeight = Double(screenSize.height)
         
-        timerLabel = UITextView(frame: CGRect(x: (screenWidth-50)/2, y: 75, width: 50, height: 50))
+//        timerLabel = UITextView(frame: CGRect(x: (screenWidth-50)/4, y: 90, width: 250, height: 50))
+//        timerLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
         timerLabel.font = UIFont.init(name: "Marker Felt", size: 25)
         timerLabel.backgroundColor = .darkGray
         timerLabel.textColor = .white
         
-        timerLabel.text = "\(totalTime)"
+        timerLabel.text = "Time remaining: \(totalTime)s"
         timerLabel.textAlignment = .center
         self.view.addSubview(timerLabel)
         generateButtons(screenHeight, screenWidth)
         
         playAgainButton.layer.cornerRadius = 5
-        playAgainButton.layer.borderWidth = 1
+        playAgainButton.layer.borderWidth = 2
         playAgainButton.layer.borderColor = UIColor.gray.cgColor
         
         quitButton.layer.cornerRadius = 5
@@ -69,8 +76,6 @@ class GameWindow: UIViewController {
         quitButton.layer.borderColor = UIColor.gray.cgColor
         
         
-        
-        playAgainButton.isHidden = true
         
         
         
@@ -80,27 +85,33 @@ class GameWindow: UIViewController {
     }
     
     @objc func buttonAction() {
+        if (!muted) {
+            playSound(soundName: "wrong", audioPlayer: &audioPlayer)
+        }
+        if (vibrate) {
+            AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+        }
         updateTime()
     }
     
     @objc func rightButton() {
+        if (!muted) {
+            playSound(soundName: "correct", audioPlayer: &audioPlayer)
+        }
+        if (vibrate) {
+            AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+        }
         deleteButtons()
         generateButtons(screenHeight, screenWidth)
         points += 1
-        pointLabel.text = "\(points)"
+        pointLabel.text = "Points: \(points)"
         
     }
  
     func generateButtons(_ height : Double,  _ width : Double) {
-        
-        
         let width = Int(width)
-        //let height = Int(height)
         var widthWhole = 0
-        //var heightWhole = 0
         var widthDiff = 0
-        //var heightDiff = 0
-        //calculations for button placement
         for index in stride(from: width, to: 0, by: -1) {
             if (index%100 == 0) {
                 widthWhole = index
@@ -108,27 +119,22 @@ class GameWindow: UIViewController {
                 break
             }
         }
-        
-
-        
         let buttonWidth = widthWhole/10
         let buttonHeight = buttonWidth
         let widthMargin = widthDiff/2
         //set color & which button is correct
-        let colorPair = colors.randomElement()!
+        var colorPair = colors.randomElement()!
+        while (colorPair.key == mainColor) {
+            //making sure new color is not the same as old color
+            colorPair = colors.randomElement()!
+        }
         mainColor = colorPair.key
         offColor = colorPair.value
         let offShadeButton = Int.random(in: 1...100)
-        
-        
         //create buttons - need to make for loop
         var currXPos = widthMargin
         var currYPos = 250
-        
         for index in 1...100 {
-            //print(index)
-            
-            
             var currButton = buttons[index]
             currButton = UIButton(frame: CGRect(x: currXPos, y: currYPos, width: buttonWidth, height: buttonHeight))
             if (index == offShadeButton) {
@@ -171,7 +177,7 @@ class GameWindow: UIViewController {
             deleteButtons()
             endTimer()
         }
-        timerLabel.text = "\(totalTime)"
+        timerLabel.text = "Time remaining: \(totalTime)s"
     }
     
     func endTimer() {
@@ -184,7 +190,7 @@ class GameWindow: UIViewController {
         alert.addAction(UIAlertAction(title: "Play Again", style: .default, handler: { action in
             self.totalTime = 60
             self.points = 0
-            self.pointLabel.text = "\(self.points)"
+            self.pointLabel.text = "Points: \(self.points)"
             self.deleteButtons()
             self.generateButtons(self.screenHeight, self.screenWidth)
             self.startTimer()
@@ -212,8 +218,12 @@ class GameWindow: UIViewController {
     
     @IBAction func playAgain(_ sender: UIButton) {
         
-        quitButton.isHidden = true
-        playAgainButton.isHidden = true
+        totalTime = 60
+        points = 0
+        pointLabel.text = "Points: \(self.points)"
+        deleteButtons()
+        generateButtons(self.screenHeight, self.screenWidth)
+        startTimer()
         
     }
     
@@ -221,6 +231,26 @@ class GameWindow: UIViewController {
         performSegue(withIdentifier: "quitGame", sender: self)
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if (segue.identifier == "quitGame") {
+            let destination = segue.destination as! ViewController
+            destination.muted = muted
+            destination.vibrate = vibrate
+        }
+    }
+    
+    func playSound(soundName: String, audioPlayer: inout AVAudioPlayer) {
+        if let sound = NSDataAsset(name: soundName) {
+            do {
+                try audioPlayer = AVAudioPlayer(data: sound.data)
+                audioPlayer.play()
+            } catch {
+                print("error")
+            }
+        } else {
+            print ("error2")
+        }
+    }
     
 
     
@@ -263,4 +293,6 @@ extension UIAlertController{
         }
         self.setValue(attributeString, forKey: "attributedTitle")//4
     }
+    
+    
 }
